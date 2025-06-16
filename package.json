@@ -1,0 +1,32 @@
+{
+  "name": "crm-backend",
+  "version": "0.0.1",
+  "description": "CRM backend",
+  "module": "server.js",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha src/tests/**/*.test.js",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "migrate": "node src/common/database/migrate.js",
+    "seed": "node src/common/database/seed.js",
+    "setup": "npm run migrate && npm run seed"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.14.1",
+    "nodemon": "^3.1.10"
+  }
+}
