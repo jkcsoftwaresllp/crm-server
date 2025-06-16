@@ -1,4 +1,3 @@
-// IMPORTS
 import express from "express";
 import { config } from "dotenv";
 import cors from "cors";
@@ -6,7 +5,6 @@ import publicRoutes from "./src/common/routes/publicRoutes.js";
 import privateRoutes from "./src/common/routes/privateRoutes.js";
 import auth from "./src/common/middlewares/authenticate.js";
 
-// SETUP
 config();
 const server = express();
 const PORT = process.env.PORT || 8000;
@@ -15,7 +13,7 @@ const allowedOrigins = [
 ];
 const corsOptions = {
   origin: function(origin, callback) {
-    if (!origin) return callback(null, true); // allow requests with no origin (like curl, postman)
+    if (!origin) return callback(null, true); 
     if (allowedOrigins.indexOf(origin) === -1) {
       const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
       return callback(new Error(msg), false);
@@ -25,17 +23,14 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-// MIDDLEWARES
 server.use(express.json());
 server.disable("x-powered-by");
 server.use(cors(corsOptions));
 
 
-// ROUTES
 server.use('/api/public', publicRoutes);
 server.use('/api', auth, privateRoutes);
 
-// START
 server.listen(PORT, () => {
   console.info(`Server Running @ http://localhost:${PORT}/`);
 })
