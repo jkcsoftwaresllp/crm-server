@@ -1,1 +1,1 @@
-//.
+export { default as validateTimezone } from './validation/validateTimezone';
