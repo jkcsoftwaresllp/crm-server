@@ -1,1 +1,1 @@
-export { default as validateTimezone } from './validateTimezone.js';
+export { default as validateTimezone } from './validation/validateTimezone';
