@@ -6,7 +6,6 @@ import {
   updateRefreshToken,
   getRefreshToken,
 } from '../repositories/authRepository.js';
-import sanitizeEmail from '../../lib/sanitization/sanitizeEmail.js';
 
 const saltRounds = 10;
 
@@ -16,11 +15,6 @@ const accessExpiry = '15m';
 const refreshExpiry = '7d';
 
 export async function signup({ email, password, name }) {
-  email = sanitizeEmail(email); 
-  if (!email) {
-    return { success: false, message: 'Invalid email format' };
-  }
-
   const existing = await findByEmail(email);
   if (existing) {
     return { success: false, message: 'Email already in use' };
@@ -33,11 +27,6 @@ export async function signup({ email, password, name }) {
 }
 
 export async function login(email, password) {
-  email = sanitizeEmail(email); 
-  if (!email) {
-    return { success: false, message: 'Invalid email format' };
-  }
-
   const user = await findByEmail(email);
   if (!user) {
     return { success: false, message: 'Invalid email or password' };
