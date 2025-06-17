@@ -75,4 +75,3 @@ export async function refresh(refreshToken) {
     return { success: false, message: 'Invalid or expired refresh token' };
   }
 }
-
