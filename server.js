@@ -4,7 +4,7 @@ import { config } from "dotenv";
 import cors from "cors";
 import publicRoutes from "./src/common/routes/publicRoutes.js";
 import privateRoutes from "./src/common/routes/privateRoutes.js";
-import auth from "./src/common/middlewares/authenticate.js";
+import { authenticate } from "./src/common/middlewares/authenticate.js";
 
 // SETUP
 config();
@@ -33,7 +33,7 @@ server.use(cors(corsOptions));
 
 // ROUTES
 server.use('/api/public', publicRoutes);
-server.use('/api', auth, privateRoutes);
+server.use('/api', authenticate, privateRoutes);
 
 // START
 server.listen(PORT, () => {
