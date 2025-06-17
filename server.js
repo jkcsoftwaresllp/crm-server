@@ -32,7 +32,7 @@ server.use(cors(corsOptions));
 
 
 // ROUTES
-server.use('/api/public', publicRoutes);
+server.use('/api/v1', publicRoutes);
 server.use('/api', auth, privateRoutes);
 
 // START
