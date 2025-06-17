@@ -3,10 +3,12 @@ import * as AuthService from "../services/authService.js";
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function signup(req, res) {
-  const { email, password, name } = req.body;
+  const { email, password, name, organization } = req.body; // ⬅️ Added organization
 
-  if (!email || !password || !name) {
-    return res.status(400).json({ message: 'Email, name, and password are required' });
+  if (!email || !password || !name || !organization?.name || !organization?.domain) {
+    return res.status(400).json({
+      message: 'Email, name, password, organization name and domain are required'
+    });
   }
 
   if (!emailRegex.test(email)) {
@@ -17,7 +19,7 @@ export async function signup(req, res) {
     return res.status(400).json({ message: 'Password must be at least 8 characters' });
   }
 
-  const result = await AuthService.signup({ email, password, name });
+  const result = await AuthService.signup({ email, password, name, organization }); // ⬅️ Pass organization
 
   if (!result.success) {
     return res.status(409).json({ message: result.message });
