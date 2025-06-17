@@ -8,14 +8,15 @@
   "scripts": {
     "test": "mocha src/tests/**/*.test.js",
     "start": "node server.js",
-    "dev": "nodemon server.js",
-    "migrate": "node src/common/database/migrate.js",
     "seed": "node src/common/database/seed.js",
-    "setup": "npm run migrate && npm run seed"
+    "setup": "npm run migrate && npm run seed",
+    "dev": "nodemon server.js",
+    "migrate": "npx sequelize-cli db:migrate"
   },
   "license": "ISC",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "sequelize-cli": "^6.6.3"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -28,6 +29,7 @@
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.6.0",
     "mysql2": "^3.14.1",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "sequelize": "^6.37.7"
   }
 }
