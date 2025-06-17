@@ -1,30 +1,35 @@
-import { parsePhoneNumberFromString } from 'libphonenumber-js';
+export const validatePhoneNumber = (phone, countryCode = 'IN') => {
+  // Remove spaces, dashes, parentheses
+  const cleaned = phone.replace(/[\s\-()]/g, '');
 
-/**
- * Validates and formats a phone number.
- * @param {string} phone - Phone number input (e.g., '9876543210', '+919876543210')
- * @param {string} [countryCode='IN'] - Optional country code (default is 'IN' for India)
- * @returns {{ isValid: boolean, formatted?: string, error?: string }}
- */
-export function validatePhoneNumber(phone, countryCode = 'IN') {
-  try {
-    const phoneNumber = parsePhoneNumberFromString(phone, countryCode);
+  let formatted = '';
+  let isValid = false;
 
-    if (phoneNumber && phoneNumber.isValid()) {
-      return {
-        isValid: true,
-        formatted: phoneNumber.formatInternational()
-      };
-    } else {
-      return {
-        isValid: false,
-        error: 'Invalid phone number'
-      };
+  if (countryCode === 'IN') {
+    // Case 1: Starts with +91
+    if (/^\+91\d{10}$/.test(cleaned)) {
+      formatted = cleaned;
+      isValid = true;
     }
-  } catch (err) {
-    return {
-      isValid: false,
-      error: 'Error parsing phone number'
-    };
+    // Case 2: Starts with 91
+    else if (/^91\d{10}$/.test(cleaned)) {
+      formatted = `+${cleaned}`;
+      isValid = true;
+    }
+    // Case 3: Starts with 0
+    else if (/^0\d{10}$/.test(cleaned)) {
+      formatted = `+91${cleaned.slice(1)}`;
+      isValid = true;
+    }
+    // Case 4: Just 10 digits
+    else if (/^\d{10}$/.test(cleaned)) {
+      formatted = `+91${cleaned}`;
+      isValid = true;
+    }
   }
-}
+
+  return {
+    isValid,
+    formatted: isValid ? formatted : null,
+  };
+};
