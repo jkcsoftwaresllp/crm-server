@@ -5,6 +5,7 @@ import cors from "cors";
 import publicRoutes from "./src/common/routes/publicRoutes.js";
 import privateRoutes from "./src/common/routes/privateRoutes.js";
 import auth from "./src/common/middlewares/authenticate.js";
+import { validatePhoneNumber } from './src/common/utils/validation/validatePhone.js';
 
 // SETUP
 config();
