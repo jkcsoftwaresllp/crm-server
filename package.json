@@ -10,8 +10,8 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "migrate": "node src/common/database/migrate.js",
-    "seed": "node src/common/database/seed.js",
-    "seed:clear": "node src/common/database/seed.js --clear",
+    "seed": "node src/common/database/seeders/masterSeeders.js",
+    "seed:clear": "node src/common/database/seeders/masterSeeders.js --clear",
     "setup": "npm run migrate && npm run seed"
   },
   "license": "ISC",

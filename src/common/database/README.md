@@ -1,9 +1,8 @@
 # Database Seeders Documentation
 
 ## Overview
-This seeding system populates your CRM database with comprehensive test data for parallel development[5].
+This seeding system populates your CRM database with comprehensive test data for parallel development.
 
- **WARNING**: Only use in development/testing environments!
 
 ## Test Credentials
 
