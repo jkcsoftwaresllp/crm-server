@@ -5,7 +5,6 @@ import cors from "cors";
 import publicRoutes from "./src/common/routes/publicRoutes.js";
 import privateRoutes from "./src/common/routes/privateRoutes.js";
 import auth from "./src/common/middlewares/authenticate.js";
-
 // SETUP
 config();
 const server = express();
