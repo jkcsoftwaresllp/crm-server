@@ -6,7 +6,13 @@ import {
   updateRefreshToken,
   getRefreshToken,
 } from '../repositories/authRepository.js';
+import { validatePhoneNumber } from '../../../common/utils/validation/validatePhone.js';
+const phone = '09876 543210';
+const { isValid, formatted } = validatePhoneNumber(phone);
 
+if (!isValid) {
+  throw new Error('Invalid phone number');
+}
 const saltRounds = 10;
 
 const accessSecret = process.env.ACCESS_TOKEN_SECRET;
@@ -75,4 +81,3 @@ export async function refresh(refreshToken) {
     return { success: false, message: 'Invalid or expired refresh token' };
   }
 }
-
