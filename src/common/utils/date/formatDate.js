@@ -1,4 +1,4 @@
-export const formatDate = (date, format = 'dd-MM-yyyy') => {
+export const formatDate = (date, format = 'DD-MM-YYYY') => {
   const d = new Date(date);
   const year = d.getFullYear();
   const month = `${d.getMonth() + 1}`.padStart(2, '0');
@@ -8,10 +8,10 @@ export const formatDate = (date, format = 'dd-MM-yyyy') => {
   const seconds = `${d.getSeconds()}`.padStart(2, '0');
 
   return format
-    .replace('yyyy', year)
+    .replace('YYYY', year)
     .replace('MM', month)
-    .replace('dd', day)
+    .replace('DD', day)
     .replace('HH', hours)
-    .replace('mm', minutes)
-    .replace('ss', seconds);
+    .replace('MM', minutes)
+    .replace('SS', seconds);
 };
