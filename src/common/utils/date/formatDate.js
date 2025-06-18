@@ -1,6 +1,5 @@
-export const formatDate = (date, format = 'yyyy-MM-dd HH:mm:ss') => {
+export const formatDate = (date, format = 'dd-MM-yyyy') => {
   const d = new Date(date);
-
   const year = d.getFullYear();
   const month = `${d.getMonth() + 1}`.padStart(2, '0');
   const day = `${d.getDate()}`.padStart(2, '0');
