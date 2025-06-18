@@ -11,9 +11,7 @@ const missingVars = requiredVars.filter((key) => !process.env[key]);
 if (missingVars.length) {
   logger.error(`Missing database config variables: ${missingVars.join(", ")}`, {
     component: 'database-config',
-    missingVars,
-    requiredVars,
-    environmentCheck: 'failed'
+    missingVars
   });
   process.exit(1);
 }
@@ -30,31 +28,21 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-// Optional: Test the connection immediately
+// Test the connection with minimal logging
 (async () => {
   try {
     const connection = await pool.getConnection();
     logger.info("Database connection pool established", {
       database: process.env.DB_NAME,
       host: process.env.DB_HOST,
-      port: process.env.DB_PORT || 3306,
-      connectionLimit: process.env.DB_CONN_LIMIT || "10",
-      component: 'database-connection',
-      connectionStatus: 'success',
-      timestamp: new Date().toISOString()
+      component: 'database-connection'
     });
     connection.release();
   } catch (err) {
     logger.error("Failed to connect to the database", {
       error: err.message,
-      stack: err.stack,
       database: process.env.DB_NAME,
-      host: process.env.DB_HOST,
-      port: process.env.DB_PORT || 3306,
-      component: 'database-connection',
-      connectionStatus: 'failed',
-      errorCode: err.code,
-      timestamp: new Date().toISOString()
+      component: 'database-connection'
     });
     process.exit(1);
   }

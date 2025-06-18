@@ -2,10 +2,10 @@ import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
 
-const levels = { error: 0, warn: 1, info: 2, debug: 3 };
+const levels = { error: 0, warn: 1, info: 2, verbose: 3, debug: 4 };
 const colors = {
   error: '\x1b[31m', warn: '\x1b[33m', info: '\x1b[36m',
-  debug: '\x1b[35m', reset: '\x1b[0m'
+  verbose: '\x1b[90m', debug: '\x1b[35m', reset: '\x1b[0m'
 };
 
 const currentLevel = process.env.NODE_ENV === 'production' ? 'info' : 'debug';
@@ -33,7 +33,6 @@ function formatMessage(level, message, context = {}) {
     pid: process.pid,
     service: 'crm-backend',
     database: 'crm',
-    environment: process.env.NODE_ENV || 'development',
     ...context
   };
 }
@@ -68,16 +67,13 @@ function logToConsole(level, logEntry) {
   const reset = colors.reset;
   const time = new Date(logEntry.timestamp).toLocaleTimeString();
   
-  // Display main message
   console.log(`${color}[${time}] ${level.toUpperCase()}:${reset} ${logEntry.message}`);
   
-  // Display context object if present and not empty (excluding standard fields)
-  if (logEntry && Object.keys(logEntry).length > 0) {
-    const { timestamp, level: logLevel, message, hostname, pid, service, database, environment, ...context } = logEntry;
-    if (Object.keys(context).length > 0) {
-      console.log(`${color}Context:${reset}`);
-      console.log(JSON.stringify(context, null, 2));
-    }
+  // Show context if present
+  const { timestamp, level: logLevel, message, hostname, pid, service, database, ...context } = logEntry;
+  if (Object.keys(context).length > 0) {
+    console.log(`${color}Context:${reset}`);
+    console.log(JSON.stringify(context, null, 2));
   }
 }
 
@@ -90,44 +86,23 @@ async function log(level, message, context = {}) {
 }
 
 export async function error(message, context = {}) {
-  if (context.error?.stack) {
-    context.stack = context.error.stack;
-    context.errorName = context.error.name;
-    context.errorMessage = context.error.message;
-  }
+  if (context.error?.stack) context.stack = context.error.stack;
   await log('error', message, context);
 }
-
-export async function warn(message, context = {}) { 
-  await log('warn', message, context); 
-}
-
-export async function info(message, context = {}) { 
-  await log('info', message, context); 
-}
-
-export async function debug(message, context = {}) { 
-  await log('debug', message, context); 
-}
+export async function warn(message, context = {}) { await log('warn', message, context); }
+export async function info(message, context = {}) { await log('info', message, context); }
+export async function verbose(message, context = {}) { await log('verbose', message, context); }
+export async function debug(message, context = {}) { await log('debug', message, context); }
 
 export async function logSlowQuery(query, duration, context = {}) {
   if (duration >= slowQueryThreshold) {
     await warn('Slow query detected', {
-      query: query.substring(0, 200) + (query.length > 200 ? '...' : ''),
+      query: query.substring(0, 200),
       duration: `${duration}ms`,
-      durationMs: duration,
       threshold: `${slowQueryThreshold}ms`,
-      table: extractTable(query),
-      queryType: query.trim().split(' ')[0].toUpperCase(),
-      performanceIssue: true,
       ...context
     });
   }
-}
-
-export function extractTable(sql) {
-  const match = sql.match(/(?:FROM|INTO|UPDATE|JOIN)\s+`?(\w+)`?/i);
-  return match ? match[1] : 'unknown';
 }
 
 export function startTimer() { return process.hrtime.bigint(); }
