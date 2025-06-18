@@ -1,5 +1,6 @@
 import { config } from "dotenv";
 import mysql from "mysql2/promise";
+import * as logger from "../logger/loggerSetup.js";
 
 config();
 
@@ -8,7 +9,12 @@ const requiredVars = ["DB_HOST", "DB_USER", "DB_PASS", "DB_NAME"];
 const missingVars = requiredVars.filter((key) => !process.env[key]);
 
 if (missingVars.length) {
-  console.error(`❌ Missing database config variables: ${missingVars.join(", ")}`);
+  logger.error(`Missing database config variables: ${missingVars.join(", ")}`, {
+    component: 'database-config',
+    missingVars,
+    requiredVars,
+    environmentCheck: 'failed'
+  });
   process.exit(1);
 }
 
@@ -28,10 +34,28 @@ const pool = mysql.createPool({
 (async () => {
   try {
     const connection = await pool.getConnection();
-    console.info("Database connection pool established.");
+    logger.info("Database connection pool established", {
+      database: process.env.DB_NAME,
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT || 3306,
+      connectionLimit: process.env.DB_CONN_LIMIT || "10",
+      component: 'database-connection',
+      connectionStatus: 'success',
+      timestamp: new Date().toISOString()
+    });
     connection.release();
   } catch (err) {
-    console.error("🔴 Failed to connect to the database:", err.message);
+    logger.error("Failed to connect to the database", {
+      error: err.message,
+      stack: err.stack,
+      database: process.env.DB_NAME,
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT || 3306,
+      component: 'database-connection',
+      connectionStatus: 'failed',
+      errorCode: err.code,
+      timestamp: new Date().toISOString()
+    });
     process.exit(1);
   }
 })();
