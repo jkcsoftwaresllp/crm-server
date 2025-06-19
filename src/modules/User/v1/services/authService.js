@@ -7,7 +7,7 @@ import {
   getRefreshToken,
 } from '../repositories/authRepository.js';
 import { validatePhoneNumber } from '../../../../common/utils/validation/validatePhone.js';
-const phone = '09876 543210';
+const phone = '09876 23456';
 const { isValid, formatted } = validatePhoneNumber(phone);
 
 if (!isValid) {
