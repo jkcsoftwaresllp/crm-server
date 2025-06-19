@@ -12,7 +12,10 @@
     "migrate": "node src/common/database/migrate.js",
     "seed": "node src/common/database/seeders/masterSeeders.js",
     "seed:clear": "node src/common/database/seeders/masterSeeders.js --clear",
-    "setup": "npm run migrate && npm run seed"
+    "setup": "npm run migrate && npm run seed",
+    "test:logger": "node test-logger.js",
+    "test:logger:dev": "set NODE_ENV=development && node test-logger.js",
+    "test:logger:prod": "set NODE_ENV=production && node test-logger.js"
   },
   "license": "ISC",
   "devDependencies": {

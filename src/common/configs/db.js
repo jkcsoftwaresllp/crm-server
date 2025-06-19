@@ -1,5 +1,6 @@
 import { config } from "dotenv";
 import mysql from "mysql2/promise";
+import * as logger from "../logger/loggerSetup.js";
 
 config();
 
@@ -8,7 +9,10 @@ const requiredVars = ["DB_HOST", "DB_USER", "DB_PASS", "DB_NAME"];
 const missingVars = requiredVars.filter((key) => !process.env[key]);
 
 if (missingVars.length) {
-  console.error(`❌ Missing database config variables: ${missingVars.join(", ")}`);
+  logger.error(`Missing database config variables: ${missingVars.join(", ")}`, {
+    component: 'database-config',
+    missingVars
+  });
   process.exit(1);
 }
 
@@ -24,14 +28,22 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-// Optional: Test the connection immediately
+// Test the connection with minimal logging
 (async () => {
   try {
     const connection = await pool.getConnection();
-    console.info("Database connection pool established.");
+    logger.info("Database connection pool established", {
+      database: process.env.DB_NAME,
+      host: process.env.DB_HOST,
+      component: 'database-connection'
+    });
     connection.release();
   } catch (err) {
-    console.error("🔴 Failed to connect to the database:", err.message);
+    logger.error("Failed to connect to the database", {
+      error: err.message,
+      database: process.env.DB_NAME,
+      component: 'database-connection'
+    });
     process.exit(1);
   }
 })();
